@@ -1,6 +1,13 @@
 package com.example.market.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.example.market.config.AlipayProperties;
+import com.example.market.persistence.entity.OperationLogEntity;
+import com.example.market.persistence.entity.PaymentRecordEntity;
+import com.example.market.persistence.entity.TradeOrderEntity;
+import com.example.market.persistence.mapper.OperationLogMapper;
+import com.example.market.persistence.mapper.PaymentRecordMapper;
+import com.example.market.persistence.mapper.TradeOrderMapper;
 import com.example.market.service.PaymentService;
 import com.example.market.web.dto.OrderResponse;
 import com.example.market.web.dto.PaymentResponse;
@@ -13,26 +20,31 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
-public class JdbcPaymentService implements PaymentService {
+public class MybatisPlusPaymentService implements PaymentService {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final JdbcOrderService orderService;
+    private final TradeOrderMapper orderMapper;
+    private final PaymentRecordMapper paymentRecordMapper;
+    private final OperationLogMapper operationLogMapper;
+    private final MybatisPlusOrderService orderService;
     private final AlipayProperties alipayProperties;
     private final ObjectMapper objectMapper;
 
-    public JdbcPaymentService(
-        JdbcTemplate jdbcTemplate,
-        JdbcOrderService orderService,
+    public MybatisPlusPaymentService(
+        TradeOrderMapper orderMapper,
+        PaymentRecordMapper paymentRecordMapper,
+        OperationLogMapper operationLogMapper,
+        MybatisPlusOrderService orderService,
         AlipayProperties alipayProperties,
         ObjectMapper objectMapper
     ) {
-        this.jdbcTemplate = jdbcTemplate;
+        this.orderMapper = orderMapper;
+        this.paymentRecordMapper = paymentRecordMapper;
+        this.operationLogMapper = operationLogMapper;
         this.orderService = orderService;
         this.alipayProperties = alipayProperties;
         this.objectMapper = objectMapper;
@@ -104,27 +116,38 @@ public class JdbcPaymentService implements PaymentService {
     }
 
     private void markOrderPaid(String orderNo) {
-        int rows = jdbcTemplate.update("""
-            UPDATE trade_order
-            SET status = 'PAID', paid_at = NOW()
-            WHERE order_no = ? AND status = 'PENDING'
-            """, orderNo);
+        int rows = orderMapper.update(new LambdaUpdateWrapper<TradeOrderEntity>()
+            .eq(TradeOrderEntity::getOrderNo, orderNo)
+            .eq(TradeOrderEntity::getStatus, "PENDING")
+            .set(TradeOrderEntity::getStatus, "PAID")
+            .set(TradeOrderEntity::getPaidAt, LocalDateTime.now()));
         if (rows == 0) {
             throw new IllegalArgumentException("订单不存在或已支付");
         }
-        jdbcTemplate.update("""
-            INSERT INTO operation_log (biz_type, biz_id, action, detail)
-            SELECT 'ORDER', id, 'PAY', CONCAT('订单支付成功，订单号: ', order_no)
-            FROM trade_order
-            WHERE order_no = ?
-            """, orderNo);
+
+        TradeOrderEntity order = orderMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<TradeOrderEntity>()
+            .eq(TradeOrderEntity::getOrderNo, orderNo)
+            .last("LIMIT 1"));
+        if (order != null) {
+            OperationLogEntity log = new OperationLogEntity();
+            log.setBizType("ORDER");
+            log.setBizId(order.getId());
+            log.setAction("PAY");
+            log.setDetail("订单支付成功，订单号: " + orderNo);
+            operationLogMapper.insert(log);
+        }
     }
 
     private void insertPayment(Long orderId, String paymentNo, String channel, BigDecimal amount, String status, String gatewayTradeNo) {
-        jdbcTemplate.update("""
-            INSERT INTO payment_record (order_id, payment_no, channel, amount, status, gateway_trade_no, paid_at)
-            VALUES (?, ?, ?, ?, ?, ?, IF(? = 'SUCCESS', NOW(), NULL))
-            """, orderId, paymentNo, channel, amount, status, gatewayTradeNo, status);
+        PaymentRecordEntity payment = new PaymentRecordEntity();
+        payment.setOrderId(orderId);
+        payment.setPaymentNo(paymentNo);
+        payment.setChannel(channel);
+        payment.setAmount(amount);
+        payment.setStatus(status);
+        payment.setGatewayTradeNo(gatewayTradeNo);
+        payment.setPaidAt("SUCCESS".equals(status) ? LocalDateTime.now() : null);
+        paymentRecordMapper.insert(payment);
     }
 
     private boolean alipayConfigured() {

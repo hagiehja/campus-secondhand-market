@@ -1,0 +1,116 @@
+erDiagram
+    SYS_USER ||--o{ PRODUCT : publishes
+    SYS_USER ||--o{ TRADE_ORDER : buys
+    SYS_USER ||--o{ TRADE_ORDER : sells
+    SYS_USER ||--o{ FAVORITE : favorites
+    SYS_USER ||--o{ MESSAGE : sends
+    SYS_USER ||--o{ MESSAGE : receives
+    SYS_USER ||--o{ REVIEW : writes
+    SYS_USER ||--o{ REVIEW : receives
+    CATEGORY ||--o{ PRODUCT : contains
+    CATEGORY ||--o{ CATEGORY : parent
+    PRODUCT ||--o{ PRODUCT_IMAGE : has
+    PRODUCT ||--o{ TRADE_ORDER : generates
+    PRODUCT ||--o{ FAVORITE : collected_by
+    PRODUCT ||--o{ MESSAGE : discussed_in
+    TRADE_ORDER ||--o{ REVIEW : has
+
+    SYS_USER {
+        bigint id PK
+        varchar username UK
+        varchar password_hash
+        varchar real_name
+        varchar student_no UK
+        varchar phone
+        varchar email
+        enum role
+        tinyint status
+        datetime last_login_at
+        datetime created_at
+        datetime updated_at
+    }
+
+    CATEGORY {
+        bigint id PK
+        varchar name
+        bigint parent_id FK
+        int sort_no
+        tinyint status
+        datetime created_at
+        datetime updated_at
+    }
+
+    PRODUCT {
+        bigint id PK
+        bigint seller_id FK
+        bigint category_id FK
+        varchar title
+        text description
+        decimal price
+        decimal original_price
+        enum condition_level
+        varchar trade_place
+        enum status
+        int view_count
+        datetime created_at
+        datetime updated_at
+    }
+
+    PRODUCT_IMAGE {
+        bigint id PK
+        bigint product_id FK
+        varchar image_url
+        int sort_no
+        datetime created_at
+    }
+
+    TRADE_ORDER {
+        bigint id PK
+        varchar order_no UK
+        bigint product_id FK
+        bigint buyer_id FK
+        bigint seller_id FK
+        decimal amount
+        enum status
+        varchar buyer_remark
+        datetime created_at
+        datetime paid_at
+        datetime finished_at
+        datetime updated_at
+    }
+
+    FAVORITE {
+        bigint id PK
+        bigint user_id FK
+        bigint product_id FK
+        datetime created_at
+    }
+
+    MESSAGE {
+        bigint id PK
+        bigint product_id FK
+        bigint sender_id FK
+        bigint receiver_id FK
+        varchar content
+        tinyint is_read
+        datetime created_at
+    }
+
+    REVIEW {
+        bigint id PK
+        bigint order_id FK
+        bigint reviewer_id FK
+        bigint target_user_id FK
+        tinyint score
+        varchar content
+        datetime created_at
+    }
+
+    OPERATION_LOG {
+        bigint id PK
+        varchar biz_type
+        bigint biz_id
+        varchar action
+        varchar detail
+        datetime created_at
+    }

@@ -1,0 +1,29 @@
+# Local secrets
+backend/application-local.yml
+.env
+.env.local
+*.local
+
+# Java / Maven
+backend/target/
+target/
+
+# Node / Vite
+frontend/node_modules/
+frontend/dist/
+node_modules/
+dist/
+
+# Runtime logs
+*.log
+backend/*.log
+frontend/*.log
+
+# Generated local outputs
+output/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

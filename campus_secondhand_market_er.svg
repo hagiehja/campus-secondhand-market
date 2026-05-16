@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100">
+  <defs>
+    <style>
+      .bg { fill: #f7f9fc; }
+      .entity { fill: #ffffff; stroke: #2f5597; stroke-width: 2; rx: 8; }
+      .head { fill: #2f5597; }
+      .title { fill: #ffffff; font: 700 18px Arial, sans-serif; }
+      .field { fill: #1f2937; font: 14px Arial, sans-serif; }
+      .pk { fill: #b91c1c; font: 700 14px Arial, sans-serif; }
+      .fk { fill: #2563eb; font: 700 14px Arial, sans-serif; }
+      .line { stroke: #374151; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .rel { fill: #111827; font: 13px Arial, sans-serif; }
+      .note { fill: #4b5563; font: 15px Arial, sans-serif; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1600" height="1100"/>
+  <text x="800" y="42" text-anchor="middle" style="font:700 30px Arial,sans-serif;fill:#111827;">Campus Secondhand Market ER Diagram</text>
+  <text x="800" y="70" text-anchor="middle" class="note">Student No: 2415304249 | Topic 9 | MySQL + Spring Boot + Redis + Vue</text>
+
+  <!-- SYS_USER -->
+  <g transform="translate(70,120)">
+    <rect class="entity" width="250" height="260"/>
+    <rect class="head" width="250" height="42" rx="8"/>
+    <text class="title" x="125" y="27" text-anchor="middle">SYS_USER</text>
+    <text class="pk" x="16" y="70">PK id</text>
+    <text class="field" x="16" y="95">username UK</text>
+    <text class="field" x="16" y="120">password_hash</text>
+    <text class="field" x="16" y="145">real_name</text>
+    <text class="field" x="16" y="170">student_no UK</text>
+    <text class="field" x="16" y="195">role</text>
+    <text class="field" x="16" y="220">status</text>
+    <text class="field" x="16" y="245">created_at, updated_at</text>
+  </g>
+
+  <!-- CATEGORY -->
+  <g transform="translate(675,120)">
+    <rect class="entity" width="250" height="210"/>
+    <rect class="head" width="250" height="42" rx="8"/>
+    <text class="title" x="125" y="27" text-anchor="middle">CATEGORY</text>
+    <text class="pk" x="16" y="70">PK id</text>
+    <text class="field" x="16" y="95">name</text>
+    <text class="fk" x="16" y="120">FK parent_id</text>
+    <text class="field" x="16" y="145">sort_no</text>
+    <text class="field" x="16" y="170">status</text>
+    <text class="field" x="16" y="195">created_at, updated_at</text>
+  </g>
+
+  <!-- PRODUCT -->
+  <g transform="translate(465,430)">
+    <rect class="entity" width="300" height="300"/>
+    <rect class="head" width="300" height="42" rx="8"/>
+    <text class="title" x="150" y="27" text-anchor="middle">PRODUCT</text>
+    <text class="pk" x="16" y="70">PK id</text>
+    <text class="fk" x="16" y="95">FK seller_id</text>
+    <text class="fk" x="16" y="120">FK category_id</text>
+    <text class="field" x="16" y="145">title</text>
+    <text class="field" x="16" y="170">price, original_price</text>
+    <text class="field" x="16" y="195">condition_level</text>
+    <text class="field" x="16" y="220">trade_place</text>
+    <text class="field" x="16" y="245">status</text>
+    <text class="field" x="16" y="270">view_count</text>
+  </g>
+
+  <!-- PRODUCT_IMAGE -->
+  <g transform="translate(1010,135)">
+    <rect class="entity" width="250" height="160"/>
+    <rect class="head" width="250" height="42" rx="8"/>
+    <text class="title" x="125" y="27" text-anchor="middle">PRODUCT_IMAGE</text>
+    <text class="pk" x="16" y="70">PK id</text>
+    <text class="fk" x="16" y="95">FK product_id</text>
+    <text class="field" x="16" y="120">image_url</text>
+    <text class="field" x="16" y="145">sort_no, created_at</text>
+  </g>
+
+  <!-- TRADE_ORDER -->
+  <g transform="translate(1010,405)">
+    <rect class="entity" width="280" height="270"/>
+    <rect class="head" width="280" height="42" rx="8"/>
+    <text class="title" x="140" y="27" text-anchor="middle">TRADE_ORDER</text>
+    <text class="pk" x="16" y="70">PK id</text>
+    <text class="field" x="16" y="95">order_no UK</text>
+    <text class="fk" x="16" y="120">FK product_id</text>
+    <text class="fk" x="16" y="145">FK buyer_id</text>
+    <text class="fk" x="16" y="170">FK seller_id</text>
+    <text class="field" x="16" y="195">amount</text>
+    <text class="field" x="16" y="220">status</text>
+    <text class="field" x="16" y="245">created_at, paid_at</text>
+  </g>
+
+  <!-- FAVORITE -->
+  <g transform="translate(70,470)">
+    <rect class="entity" width="250" height="160"/>
+    <rect class="head" width="250" height="42" rx="8"/>
+    <text class="title" x="125" y="27" text-anchor="middle">FAVORITE</text>
+    <text class="pk" x="16" y="70">PK id</text>
+    <text class="fk" x="16" y="95">FK user_id</text>
+    <text class="fk" x="16" y="120">FK product_id</text>
+    <text class="field" x="16" y="145">created_at</text>
+  </g>
+
+  <!-- MESSAGE -->
+  <g transform="translate(70,760)">
+    <rect class="entity" width="250" height="210"/>
+    <rect class="head" width="250" height="42" rx="8"/>
+    <text class="title" x="125" y="27" text-anchor="middle">MESSAGE</text>
+    <text class="pk" x="16" y="70">PK id</text>
+    <text class="fk" x="16" y="95">FK product_id</text>
+    <text class="fk" x="16" y="120">FK sender_id</text>
+    <text class="fk" x="16" y="145">FK receiver_id</text>
+    <text class="field" x="16" y="170">content, is_read</text>
+    <text class="field" x="16" y="195">created_at</text>
+  </g>
+
+  <!-- REVIEW -->
+  <g transform="translate(1010,780)">
+    <rect class="entity" width="280" height="210"/>
+    <rect class="head" width="280" height="42" rx="8"/>
+    <text class="title" x="140" y="27" text-anchor="middle">REVIEW</text>
+    <text class="pk" x="16" y="70">PK id</text>
+    <text class="fk" x="16" y="95">FK order_id</text>
+    <text class="fk" x="16" y="120">FK reviewer_id</text>
+    <text class="fk" x="16" y="145">FK target_user_id</text>
+    <text class="field" x="16" y="170">score, content</text>
+    <text class="field" x="16" y="195">created_at</text>
+  </g>
+
+  <!-- OPERATION_LOG -->
+  <g transform="translate(1325,430)">
+    <rect class="entity" width="230" height="185"/>
+    <rect class="head" width="230" height="42" rx="8"/>
+    <text class="title" x="115" y="27" text-anchor="middle">OPERATION_LOG</text>
+    <text class="pk" x="16" y="70">PK id</text>
+    <text class="field" x="16" y="95">biz_type</text>
+    <text class="field" x="16" y="120">biz_id</text>
+    <text class="field" x="16" y="145">action, detail</text>
+    <text class="field" x="16" y="170">created_at</text>
+  </g>
+
+  <!-- Relationship lines -->
+  <path class="line" d="M320 250 C380 250, 405 520, 465 520"/>
+  <text class="rel" x="345" y="315">1 user publishes N products</text>
+
+  <path class="line" d="M800 330 C800 380, 715 405, 690 430"/>
+  <text class="rel" x="735" y="388">1 category contains N products</text>
+
+  <path class="line" d="M925 225 C960 225, 975 215, 1010 215"/>
+  <text class="rel" x="935" y="205">self parent</text>
+
+  <path class="line" d="M765 505 C865 430, 910 230, 1010 220"/>
+  <text class="rel" x="828" y="345">1 product has N images</text>
+
+  <path class="line" d="M765 555 C850 540, 925 535, 1010 535"/>
+  <text class="rel" x="820" y="520">1 product generates N orders</text>
+
+  <path class="line" d="M320 550 C370 550, 415 565, 465 575"/>
+  <text class="rel" x="335" y="535">N favorites to 1 product</text>
+
+  <path class="line" d="M195 380 C195 425, 195 440, 195 470"/>
+  <text class="rel" x="205" y="435">1 user favorites N</text>
+
+  <path class="line" d="M320 850 C385 800, 420 650, 465 625"/>
+  <text class="rel" x="330" y="735">messages about product</text>
+
+  <path class="line" d="M195 380 C150 500, 150 650, 195 760"/>
+  <text class="rel" x="80" y="585">users send/receive</text>
+
+  <path class="line" d="M320 250 C510 250, 835 460, 1010 500"/>
+  <text class="rel" x="520" y="285">buyer/seller users</text>
+
+  <path class="line" d="M1150 675 C1150 715, 1150 745, 1150 780"/>
+  <text class="rel" x="1160" y="730">1 order has N reviews</text>
+
+  <path class="line" d="M320 270 C520 350, 860 835, 1010 870"/>
+  <text class="rel" x="525" y="845">users write/receive reviews</text>
+
+  <path class="line" d="M1290 540 C1305 540, 1310 530, 1325 525"/>
+  <text class="rel" x="1310" y="505">triggers write logs</text>
+</svg>

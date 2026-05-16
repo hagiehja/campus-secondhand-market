@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+spring:
+  config:
+    import: optional:file:./application-local.yml
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.24.129:3307/campus_secondhand_market?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: campus_user
+    password: Campus@2415304249
+  data:
+    redis:
+      host: 192.168.24.129
+      port: 6379
+      database: 0
+      timeout: 3000ms
+
+market:
+  agent:
+    enabled: true
+    api-key: ${DEEPSEEK_API_KEY:}
+    base-url: https://api.deepseek.com/v1
+    model-name: deepseek-chat
+    temperature: 0.4
+    timeout-seconds: 60
+    max-retries: 1
+  alipay:
+    # 真实支付前把 enabled 改成 true，并填写支付宝开放平台应用参数。
+    enabled: false
+    gateway: https://openapi-sandbox.dl.alipaydev.com/gateway.do
+    app-id:
+    private-key:
+    alipay-public-key:
+    notify-url:
+    return-url: http://127.0.0.1:5173
+    # 课程演示金额。真实生产系统应改为订单金额。
+    demo-pay-amount: 0.01
+  sms:
+    enabled: ${ALIYUN_SMS_ENABLED:false}
+    access-key-id: ${ALIBABA_CLOUD_ACCESS_KEY_ID:}
+    access-key-secret: ${ALIBABA_CLOUD_ACCESS_KEY_SECRET:}
+    sign-name: ${ALIYUN_SMS_SIGN_NAME:}
+    template-code: ${ALIYUN_SMS_TEMPLATE_CODE:}
+    endpoint: dysmsapi.aliyuncs.com
+    expire-minutes: 5

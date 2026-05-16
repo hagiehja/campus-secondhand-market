@@ -4,8 +4,6 @@
 
 ## 项目信息
 
-- 学号：2415304249
-- 姓名：黄钰宗
 - 项目名称：校园二手交易系统
 - 后端技术栈：Java 17、Spring Boot、MySQL 5.7、Redis、JDBC、LangChain4j
 - 前端技术栈：Vue 3、Vite、HTML、CSS、JavaScript

@@ -1,11 +1,11 @@
 # 校园二手交易系统
 
-这是一个面向校园场景的二手交易系统课程设计项目，主题为“校园二手交易系统”。项目包含 Spring Boot 后端、Vue 前端、MySQL 数据库脚本、Redis 缓存、RocketMQ 订单事件消息、DeepSeek AI 助手、短信验证码登录和支付宝支付演示接口。
+这是一个面向校园场景的二手交易系统课程设计项目，主题为“校园二手交易系统”。项目包含 Spring Boot 后端、Vue 前端、MySQL 数据库脚本、Redis 缓存、RocketMQ 订单事件消息、MyBatis-Plus 数据访问、DeepSeek AI 助手、短信验证码登录和支付宝支付演示接口。
 
 ## 项目信息
 
 - 项目名称：校园二手交易系统
-- 后端技术栈：Java 17、Spring Boot、MySQL 5.7、Redis、RocketMQ、JDBC、LangChain4j
+- 后端技术栈：Java 17、Spring Boot、MySQL 5.7、Redis、RocketMQ、MyBatis-Plus、LangChain4j
 - 前端技术栈：Vue 3、Vite、HTML、CSS、JavaScript
 - 数据库：MySQL 5.7
 - 默认后端端口：8080

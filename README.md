@@ -1,11 +1,11 @@
 # 校园二手交易系统
 
-这是一个面向校园场景的二手交易系统课程设计项目，主题为“校园二手交易系统”。项目包含 Spring Boot 后端、Vue 前端、MySQL 数据库脚本、Redis 缓存、DeepSeek AI 助手、短信验证码登录和支付宝支付演示接口。
+这是一个面向校园场景的二手交易系统课程设计项目，主题为“校园二手交易系统”。项目包含 Spring Boot 后端、Vue 前端、MySQL 数据库脚本、Redis 缓存、RocketMQ 订单事件消息、DeepSeek AI 助手、短信验证码登录和支付宝支付演示接口。
 
 ## 项目信息
 
 - 项目名称：校园二手交易系统
-- 后端技术栈：Java 17、Spring Boot、MySQL 5.7、Redis、JDBC、LangChain4j
+- 后端技术栈：Java 17、Spring Boot、MySQL 5.7、Redis、RocketMQ、JDBC、LangChain4j
 - 前端技术栈：Vue 3、Vite、HTML、CSS、JavaScript
 - 数据库：MySQL 5.7
 - 默认后端端口：8080
@@ -19,6 +19,7 @@
 - 商品搜索与筛选
 - 商品列表展示
 - 商品下单
+- 订单创建事件发送到 RocketMQ
 - 我的订单
 - 模拟支付
 - 支付宝支付页面接口
@@ -106,6 +107,34 @@ POST /api/orders/{orderId}/pay/mock
 GET  /api/orders/{orderId}/pay/alipay
 POST /api/agent/chat
 ```
+
+## RocketMQ 配置
+
+项目已接入 RocketMQ，用于在创建订单后发送订单事件消息。
+
+默认配置在 `backend/src/main/resources/application.yml`：
+
+```yaml
+rocketmq:
+  name-server: 192.168.24.129:9876
+  producer:
+    group: campus-secondhand-market-producer
+
+market:
+  rocketmq:
+    enabled: true
+    order-topic: campus-market-order-topic
+```
+
+订单创建成功后会发送：
+
+```text
+Topic：campus-market-order-topic
+Tag：ORDER_CREATED
+事件类型：ORDER_CREATED
+```
+
+如果 RocketMQ 暂时未启动，系统会保留下单主流程，不会因为消息发送失败而中断订单创建。
 
 ## 前端启动
 
@@ -237,4 +266,5 @@ npm run build
 - 上传 GitHub 前确认 `.gitignore` 已生效。
 - MySQL 5.7 环境需要先导入 SQL 脚本。
 - Redis 未启动时，部分缓存功能会降级，不影响主要接口演示。
+- RocketMQ 默认连接 `192.168.24.129:9876`，需要确保虚拟机已启动 NameServer。
 - 真实短信和真实支付宝支付必须配置第三方平台参数后才能使用。

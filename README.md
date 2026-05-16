@@ -55,24 +55,24 @@
 
 ## 数据库导入
 
-MySQL 端口按当前开发环境配置为 `3307`。
+MySQL 地址、端口、账号和密码请按自己的本地环境修改。
 
 ```powershell
-mysql -h 192.168.24.129 -P 3307 -uroot -p123456 < campus_secondhand_market.sql
-mysql -h 192.168.24.129 -P 3307 -uroot -p123456 < campus_secondhand_market_more_products.sql
-mysql -h 192.168.24.129 -P 3307 -uroot -p123456 < campus_secondhand_market_payment_addon.sql
-mysql -h 192.168.24.129 -P 3307 -uroot -p123456 < campus_secondhand_market_phone_login_addon.sql
-mysql -h 192.168.24.129 -P 3307 -uroot -p123456 < campus_secondhand_market_real_product_images.sql
+mysql -h 你的MySQL地址 -P 你的MySQL端口 -u你的用户名 -p < campus_secondhand_market.sql
+mysql -h 你的MySQL地址 -P 你的MySQL端口 -u你的用户名 -p < campus_secondhand_market_more_products.sql
+mysql -h 你的MySQL地址 -P 你的MySQL端口 -u你的用户名 -p < campus_secondhand_market_payment_addon.sql
+mysql -h 你的MySQL地址 -P 你的MySQL端口 -u你的用户名 -p < campus_secondhand_market_phone_login_addon.sql
+mysql -h 你的MySQL地址 -P 你的MySQL端口 -u你的用户名 -p < campus_secondhand_market_real_product_images.sql
 ```
 
-后端默认连接：
+后端数据库连接配置示例：
 
 ```yaml
 spring:
   datasource:
-    url: jdbc:mysql://192.168.24.129:3307/campus_secondhand_market
-    username: campus_user
-    password: Campus@2415304249
+    url: jdbc:mysql://你的MySQL地址:你的MySQL端口/campus_secondhand_market
+    username: 你的数据库用户名
+    password: 你的数据库密码
 ```
 
 ## 后端启动

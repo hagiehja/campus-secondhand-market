@@ -1,5 +1,6 @@
 package com.example.market.service.impl;
 
+import com.example.market.service.OrderEventPublisher;
 import com.example.market.service.OrderService;
 import com.example.market.web.dto.CreateOrderRequest;
 import com.example.market.web.dto.OrderResponse;
@@ -20,10 +21,16 @@ public class JdbcOrderService implements OrderService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ProductImageResolver productImageResolver;
+    private final OrderEventPublisher orderEventPublisher;
 
-    public JdbcOrderService(JdbcTemplate jdbcTemplate, ProductImageResolver productImageResolver) {
+    public JdbcOrderService(
+        JdbcTemplate jdbcTemplate,
+        ProductImageResolver productImageResolver,
+        OrderEventPublisher orderEventPublisher
+    ) {
         this.jdbcTemplate = jdbcTemplate;
         this.productImageResolver = productImageResolver;
+        this.orderEventPublisher = orderEventPublisher;
     }
 
     @Override
@@ -47,7 +54,9 @@ public class JdbcOrderService implements OrderService {
         if (key == null) {
             throw new IllegalStateException("订单创建失败");
         }
-        return getOrder(key.longValue());
+        OrderResponse order = getOrder(key.longValue());
+        orderEventPublisher.publishOrderCreated(order);
+        return order;
     }
 
     @Override

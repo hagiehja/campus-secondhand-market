@@ -6,9 +6,9 @@ spring:
     import: optional:file:./application-local.yml
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.24.129:3307/campus_secondhand_market?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
-    username: campus_user
-    password: Campus@2415304249
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/campus_secondhand_market?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false}
+    username: ${MYSQL_USERNAME:campus_user}
+    password: ${MYSQL_PASSWORD:}
   data:
     redis:
       host: 192.168.24.129
@@ -16,7 +16,15 @@ spring:
       database: 0
       timeout: 3000ms
 
+rocketmq:
+  name-server: 192.168.24.129:9876
+  producer:
+    group: campus-secondhand-market-producer
+
 market:
+  rocketmq:
+    enabled: true
+    order-topic: campus-market-order-topic
   agent:
     enabled: true
     api-key: ${DEEPSEEK_API_KEY:}
